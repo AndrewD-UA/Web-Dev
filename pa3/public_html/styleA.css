@@ -1,0 +1,99 @@
+/* This is a CSS file representing Style A of the PriceCo website.  
+Written by Andrew Dennison, last edited 15 SEP 23. */
+
+body{
+	margin: 0;
+	overflow: hidden;
+	font-size: 40px;
+	height: 100vh;
+	width: 100vw;
+	font-family: Trebuchet MS, sans-serif
+}
+
+#pricecoLogo{
+	height: 20vh;
+	margin-bottom: -4%;
+}
+
+#header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-end;
+	background-color: rgb(0, 102, 255);
+	color: yellow;
+	text-align: right;
+	font-size: 50px;
+	min-height: 10vh;
+	padding: 0%;
+}
+
+#navigation {
+	background-color: rgb(102, 163, 255);
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: flex-start;
+	gap:3%;
+	float:left;
+	height: 80%;
+	width: 19vw;
+	margin-right: -1%;
+	padding-right: 1%;
+	vertical-align: top;
+	font-size: 25px;
+}
+
+#content {
+	float: right;
+	background-color: rgb(135,206,250);
+	overflow-y: scroll;
+	text-align: center;
+	font-size: 125%;
+	height: 80%;
+	width: 80.75vw;
+}
+
+.navButton{
+	padding-right: 2%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	font-size: 200%;
+}
+
+.styleButton {
+	position: fixed;
+	background-color: black;
+	color: white;
+	opacity: 0.5;
+	padding: 25px;
+	margin: 10px;
+	font-size: 30px;
+}
+
+#styleA {
+	bottom: 0;
+	left: 0;
+}
+
+#styleB {
+	bottom: 0;
+	left: 150px;
+}
+
+#styleC {
+	bottom: 0;
+	left: 300px;
+}
+
+h1 {
+	position: fixed;
+	top: 0;
+	right: 0;
+	font-size: 100px;
+	margin: 0;
+}
+
+.productDesc {
+	margin: 1%;
+}

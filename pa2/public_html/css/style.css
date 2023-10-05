@@ -1,0 +1,104 @@
+/*
+This css file written by Andrew Dennison.
+Last edit on 08 SEP 23.
+The purpose of this file is to format the fantasy football
+draft website.  This is done by manipulating the various
+IDs, classes, and built-in tags in index.html.  The standard
+font family is Georgia, standard text size is 110%, and the color
+scheme is shades of blue.
+*/
+
+.inputfield {
+	color: red;
+	border: 2px blue solid;
+	margin-right: 15%;
+	background-color: black;
+	width: 35%;
+	margin-left: 15%;
+	margin-top:1%;
+	font-family: Georgia;
+}
+
+div {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+}
+
+label {
+	width: 20%;
+	margin-top: 1%;
+}
+
+body {
+	background-color: rgb(200, 200, 235);
+}
+
+h1 {
+	text-align: center;
+	font-family: Georgia;
+	font-size: 300%;
+}
+
+#intro {
+	font-family: Georgia;
+	color: black;
+	font-size: 110%;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+#introList {
+	font-family: Georgia;
+	color: black;
+	font-size: 110%;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+img {
+	border: 5px black inset;
+	margin-top: 0%;
+	margin-bottom: 1%;
+}
+
+#fantasy {
+	float: right;
+	margin-right: 5%;
+	margin-left: 2%;
+	width: 20%;
+}
+
+#nfl {
+	float: left;
+	margin-left: 5%;
+	margin-right: 2%;
+	width:15%;
+}
+
+form {
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 1%;
+	margin-bottom: 3%;
+	padding-left: 1%;
+	padding-top: 1%;
+	padding-bottom: 1%;
+	background-color: rgb(145, 145, 145);
+	border: 5px solid blue;
+	font-family: Georgia;
+	font-size:110%;
+	color: white;	
+}
+
+#radio {
+	font-family: Georgia;
+	font-size: 110%;
+}
+
+#submit {
+	background-color: green;
+	font-family: Georgia;
+	font-size:110%;
+	border: 5px outset blue;
+}

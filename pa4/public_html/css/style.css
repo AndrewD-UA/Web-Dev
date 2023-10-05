@@ -1,0 +1,82 @@
+/* By: Andrew Dennison */
+/* This file divides the two major portions of the page into flexboxes */
+/* Then, each sub-element is ordered appropriately, and for sub-elements */
+/* with their own sub-elements, those are made flexboxes too */
+
+body {
+	margin: 0;
+	display: flex;
+	flex-direction: row;
+}
+
+#inputArea {	
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	
+	width: 25%;	
+	padding-top: 3%;
+	padding-bottom: 5%;
+	text-align: center;
+	font-family: fantasy;
+	
+	background-color: grey;
+	color: white;
+}
+
+#sliderDiv {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	font-size: 30px;
+}
+
+#input {
+	width: 50%;
+}
+
+#update {
+	font-size: 30px;
+}
+
+
+#outputBox{
+	width: 75%;
+	
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.output {
+	height: 50vh;
+	font-size: 75px;
+	text-align: center;
+	word-wrap: normal;
+	overflow: hidden;
+}
+
+#text1 {
+	background-color: rgb(164, 252, 175);
+}
+
+#text2 {
+	background-color: rgb(177, 249, 255);
+}
+
+#table {
+	border-collapse: collapse;
+}
+
+h1 {
+	font-size: 75px;
+}
+
+.Cipher {
+	border: 3px red solid;
+	
+	font-size: 50px;
+	width: 50px;
+	height: 50px;
+}

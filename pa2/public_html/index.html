@@ -1,0 +1,104 @@
+<!--
+This html file written by Andrew Dennison.
+Last edit on 08 SEP 23.
+The purpose of this html file is to contain the content of the 
+fantasy signup form webpage.  The intent of this webpage is to
+ingest a user's personal information and "register" them for a fantasy
+football draft by POSTing their information to benjdd.com/sp.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset = "UTF-8">
+		<title>Sign-up Form</title>
+		<link rel="stylesheet" type="text/css" href="./css/style.css">
+	</head>
+	
+	<body>
+		<h1>Fantasy Football Signup Form</h1>
+		<div>
+			<img 	src="./img/nfl.jpg"
+					alt="NFL Logo"
+					id="nfl">
+			<img 	src="./img/fantasy.jpg"
+					alt="fantasy football"
+					id="fantasy">
+		</div>
+		<p id="intro">Please enter the following information to the best of your ability.  The accuracy of your provided information will determine the draft order, so it is in your interest to input information exactly as specified.  Drafting will occur 06 September 2023 at 8:00 PM EST, so please be prepared.  Each pick will have two minutes, although it is recommended to pick quickly to prevent lengthy drafting.  The draft will have 19 total rounds, with the following required picks:</p>
+		<ul id="introList">
+			<li>1 QB</li>
+			<li>2 RB</li>
+			<li>2 WR</li>
+			<li>1 TE</li>
+			<li>3 Flex (WR/RB/TE)</li>
+			<li>1 Wildcard (WR/RB/TE/QB)</li>
+			<li>1 K</li>
+			<li>1 Defense</li>
+			<li>7 Benched</li>
+		</ul>
+		<form method="POST" action="https://benjdd.com/sp">
+			<div>
+				<label for="fname" class="Test">First Name:</label>
+				<input type="text" id="fname" class="inputfield" name="First Name" required pattern ="[A-Z]{1}[a-z]{1,}">
+			</div>
+		
+			<div>
+				<label for="lname">Last Name:</label>
+				<input type="text" id="lname" name="Last Name" class="inputfield" required pattern ="[A-Z]{1}[a-z]{1,}">
+			</div>
+			
+			<div>
+				<label for="pemail">Primary Email:</label>
+				<input type="email" id="pemail" name="Primary Email" class="inputfield" required>
+			</div>
+			
+			<div>
+				<label for="remail">Recovery Email:</label>
+				<input type="email" id="remail" class ="inputfield" name="Recovery Email">
+			</div>
+			
+			<div>
+				<label for="password">Password:</label>
+				<input type="password" id="password" class ="inputfield" name="password" required pattern=".{8,}">
+			</div>
+			
+			<div>
+				<label for="pnumber">Phone Number:</label>
+				<input type="tel" id="pnumber" class ="inputfield" name="Phone Number" pattern="[0-9]{3}[\-][0-9]{4}">
+			</div>
+			
+			<div>
+				<label for="weight">Weight in lbs:</label>
+				<input type="number" id="weight" class ="inputfield" name="weight">
+			</div>
+			
+			<div>
+				<label for="bio">Bio:</label>
+				<textarea id="bio" name="bio" rows="3" class ="inputfield">Enter a biography here.</textarea>
+			</div>
+			
+			<div>
+				<label for="birthday">Birthday:</label>
+				<input type="date" id="birthday" class ="inputfield" name="birthday">
+			</div>
+			
+			<div>
+				<p id="radio">Sign up for newsletter?
+				<label for="radio1" class="radios">Yes</label>
+				<input type="radio" id="radio1" name="radio" value="Yes">
+				<label for="radio2" class="radios">No</label>
+				<input type="radio" id="radio2" name="radio" value="No">
+				</p>
+			</div>
+			
+			<div>
+				<label for="satisfaction">Satisfaction with Company:</label>
+				<input type="range" min=1 max=10 id="satisfaction" class ="inputfield" name="satisfaction">
+			</div>
+			
+			
+			<div> <input type="submit" value="Submit" id="submit"> </div>
+		</form>
+	</body>
+</html>

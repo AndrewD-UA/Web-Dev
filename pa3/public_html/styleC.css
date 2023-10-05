@@ -1,0 +1,85 @@
+/* This is a CSS file representing Style C of the PriceCo website.  
+Written by Andrew Dennison, last edited 15 SEP 23. */
+
+body {
+	margin: 0;
+	font-family: Trebuchet MS, sans-serif
+}
+
+.styleButton {
+	position: fixed;
+	background-color: black;
+	color: white;
+	opacity: 0.5;
+	padding: 25px;
+	margin: 10px;
+	font-size: 30px;
+}
+
+.navButton {
+	margin: 5%;
+}
+
+#pricecoLogo{
+	height: 100px;
+	width: 100px;
+}
+
+#navigation {
+	float: right;
+	width: 500px;
+	height: 500px;
+	background-color: rgb(102, 163, 255);
+	border: 5px blue solid;
+	font-size: 50px;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: justify-evenly;
+	align-items: flex-end;
+	gap: 5%;
+}
+
+#header {
+	float: left;
+	width: 500px;
+	height: 500px;
+	
+	background-color: rgb(0, 102, 255);
+	color: yellow;
+	font-size: 50px;
+	border: 5px blue solid;
+	text-align: center;
+
+}
+
+.productGroup {
+	background-color: rgb(135,206,250);
+	font-size: 50px;
+	text-align: center;
+	padding-top: 1%;
+	padding-bottom: 1%;
+}
+
+h1 {
+	font-size: 100px;
+}
+
+#styleA {
+	bottom: 0;
+	left: 0;
+}
+
+#styleB {
+	bottom: 0;
+	left: 150px;
+}
+
+#styleC {
+	bottom: 0;
+	left: 300px;
+}
+
+.productDesc {
+	margin: 1%;
+}
