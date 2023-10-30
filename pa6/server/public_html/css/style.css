@@ -1,0 +1,51 @@
+body {
+	display: flex;
+	flex-direction: column;
+	font-family: "Arial, sans serif";
+	margin: 0;
+}
+
+#header {
+	flex-grow: 1;
+	text-align: center;
+	font-size: 4em;
+	background-color: orange;
+	
+	height:25vh;
+}
+
+#content {
+	flex-grow: 3;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	background-color: gray;
+	font-size: 6em;
+	
+	height: 75vh;
+}
+
+#input {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+.contentSide {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	border: 2px solid rgb(94, 96, 96);
+	width: 100%;
+	align-items: center;
+}
+
+.items {
+	width: 75%;
+}
+
+select {
+	height: 15vh;
+	font-size: 0.5em;
+	text-align: center;
+}

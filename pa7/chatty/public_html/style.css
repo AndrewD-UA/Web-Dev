@@ -1,0 +1,40 @@
+body {
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	margin: 0;
+}
+
+#chatWindow {
+	background-color: green;
+	height: 70vh;
+	color: white;
+}
+
+#entryFields {
+	background-color: black;
+	height: 30vh;
+	color: white;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+#submit {
+	width: 12vw;
+}
+
+input {
+	width: 20vw;
+	font-size: 125%;
+}	
+
+label {
+	width: 20vw;
+}
+
+.text {
+	margin-left: 1vw;
+	margin-right: 1vw;
+}

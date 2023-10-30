@@ -1,26 +1,49 @@
 <!-- By: Andrew Dennison -->
-<!-- This HTML file portions the page for arrangment -->
-<!-- with flexboxes.  Further, the javascript is loaded -->
-<!-- At the end of the document to ensure the DOM is loaded -->
+<!-- This HTML file contains the formatting for part one of the Ostaa marketplace-->
 
 <!DOCTYPE html>
-<html lang="en">
-  
+<html lang="en">  
   <head>
     <meta charset="utf-8">
-    <title>WTTJ</title>
-    <link id="cssFile" rel="stylesheet" type="text/css" href="./css/style.css">
+    <title>OSTAA</title>
+    <link id="cssFile" rel="stylesheet" type="text/css" href="./style.css">
   </head>
   
   <body>
-	<div id="inputArea">
-		<h1 id="header">Welcome to the Jumble</h1>
-		<input type="text" id="input">
-		<div id="sliderDiv">
-			<p id="displaySlider">0</p>
-			<input type ="range" id="slider" value="0" min="0" max="25">
-		</div>
-		<input type="submit" value="Update Square" id = "update">	
+	<div id="addUser">
+		<h1 id="userHeader">Add User</h1>
+		<label for="username" class="Label">Username:</label>
+		<input type="text" id="username">
+
+		<label for="password" class="Label">Password:</label>
+		<input type="text" id="password">
+
+		<input type="submit" value="Add User" id = "submitUser" class = "submit">	
+	</div>
+
+	<div id="addItem">
+		<h1 id="itemHeader">Add Item</h1>
+
+		<label for="title" class="Label">Title:</label>
+		<input type="text" id="title">
+
+		<label for="desc" class="Label">Desc:</label>
+		<input type="text" id="desc">
+
+		<label for="image" class="Label">Image:</label>
+		<input type="text" id="image">
+
+		<label for="price" class="Label">Price:</label>
+		<input type="text" id="price">
+
+		<label for="status" class="Label">Status:</label>
+		<input type="text" id="title">
+
+		<label for="username" class="Label">Username:</label>
+		<input type="text" id="itemUserName">
+
+		<input type="submit" value="Add Item" id = "submitItem" class="submit">	
+	</div>
 	<script src="function.js"></script>
   </body>
 
