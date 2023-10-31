@@ -1,3 +1,6 @@
+/* By: Andrew Dennison 
+This file contains the css styling for the translator */
+
 body {
 	display: flex;
 	flex-direction: column;
@@ -8,10 +11,14 @@ body {
 #header {
 	flex-grow: 1;
 	text-align: center;
-	font-size: 4em;
+	font-size: 8em;
 	background-color: orange;
 	
-	height:25vh;
+	height:20vh;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 
 #content {
@@ -22,7 +29,7 @@ body {
 	background-color: gray;
 	font-size: 6em;
 	
-	height: 75vh;
+	height: 80vh;
 }
 
 #input {
@@ -35,17 +42,22 @@ body {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
-	border: 2px solid rgb(94, 96, 96);
+	border: 8px solid rgb(94, 96, 96);
 	width: 100%;
 	align-items: center;
 }
 
 .items {
 	width: 75%;
+	font-size: 1em;
 }
 
 select {
 	height: 15vh;
-	font-size: 0.5em;
+	font-size: 1em;
 	text-align: center;
+}
+
+option {
+	width: fit-content;
 }

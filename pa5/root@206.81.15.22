@@ -1,0 +1,188 @@
+/* 	Translator.js by Andrew Dennison
+*
+*	The intent of this program is to receive a URL, and from the url
+*	translate a given phrase into a given language as specified by: 
+*	/translate/{String}2{String}/{word1}+{word2}+...
+*
+*	A couple assumptions are made:
+*		- In the translation .txt files, only the last translation will be used.
+*			This leads to weird, but expected, outputs such as "Hello" in English
+*			translating to "Hello" in German.  This decision was made to exactly match
+*			the provided examples on the Assignment 5 page.
+*		- Multi-word phrases i.e. "Guten tag" is treated as two distinct words.
+*		- All words, from all inputs, are handled in lowercase.
+*		- Any String in the splits array will be used to determine where to stop 
+*			processing an entry from a lang file.  If any of the Strings are in
+*			the input, the ending will be chopped off.
+*		- Article adjectives are not removed from words.  For example, "hedonist"
+*			translates to "der Hedonist."  This is due to inconsistencies with how
+*			the files separate words.  For example, there is no way to differentiate
+*			between "he'd" and "hedonist."  Respectively, they translate to "er sollte"
+*			and "der Hedonist."  Both translations are separated with a space, however
+*			splitting by spaces changes the meaning of "he'd," from "he should" to "should."
+*			Conversely, splitting by spaces does not change the meaning of "der Hedonist," 
+*			because article adjectives do not affect word meaning.  To preserve the meaning
+*			of each word, no splitting by spaces is done on outputs.
+*		- If no word in the input is valid, or if the URL was invalid, return OK.
+*/
+
+const app = require("http");
+const fs = require("fs");
+const port = 80;
+
+// [0] is toLanguage, [1] is fromLanguage
+german = [{}, {}];
+spanish = [{}, {}];
+
+// Used only in buildDict
+var splits = ["[", "]", "(", ")", ",", ";", "/"];
+
+
+/*
+*	Lambda function specifies how to handle each request.
+*	Splits URL into components, and if the components are not in
+*	the expected request format, then skip and return "OK".
+*	Expects request: /translate/{String}2{String}/{word1}+{word2}+...
+*	
+*	If everything is in the correct format, first translate to English,
+*	then translate to final desired language.
+*/
+const server = app.createServer((req, res) => {
+	res.statusCode = 200;
+	// This is the final res.end() message
+	var display = "OK";
+	
+	var paths = req.url.split("/");
+	
+	// Check if the URL has the expected number of elements
+	if (paths.length == 4){
+		
+		// Ensure this is a translate request
+		if (paths[1] == "translate"){
+			
+			// Split to determine what translations are needed
+			var languages = paths[2].split("2");
+			var phrase = paths[3].split("+").join(" ");
+			
+			// Check to ensure this is a validly formatted translation request
+			if (languages.length == 2) {
+				
+				// If someone is translating to and from the same language, skip translations
+				if (!(languages[0] == languages[1])) {
+					
+					// Take initial request and translate to English
+					// Crucially, assuming the inital request is multiple valid words.
+					// The translate function skips invalid words
+					if (languages[0] == "s"){
+						phrase = translate(phrase, spanish[1]);
+					} else if (languages[0] == "g"){
+						phrase = translate(phrase, german[1]);
+					}
+					
+					// At this point, we assume the value in phrase is now
+					// a String separated by spaces
+					
+					// If final language is not English, translate
+					if (languages[1] == "s"){
+						phrase = translate(phrase, spanish[0]);
+					} else if (languages[1] == "g"){
+						phrase = translate(phrase, german[0]);
+					}
+				}
+				
+				display = phrase;
+			}
+		}
+	}	
+	res.end(display);
+});
+
+/**
+*	Translate a given string into the given language,
+*	specified by which dictionary is given.  If the word is
+*	not a valid word in the given dictionary, skip it.
+*
+*	@param {String} 	The String to translate, with spaces separating words
+*	@param {dictionary}	A key:value mapping of words (keys) to their translations (value)
+*	@return {String} 	Each word individually translated as a String seperated by spaces
+*/
+function translate(data, dict){
+	var words = data.split(" ");
+	var translated = [];
+	
+	// Individually translate each word seperated by a plus
+	for (var i = 0; i < words.length; i++){
+		var word = words[i].toLowerCase();
+		
+		// We skip words that are invalid
+		if (word in dict){
+			translated.push(dict[word]);
+		}
+	}
+	
+	// Join together each translated word
+	// If none of the provided words were valid, reset to OK.
+	if (translated = []){
+		return "OK";
+	}
+	return translated.join(" ");
+}
+
+/**
+*	Given a large String representing the input data, and an array of dicts,
+*	load the translations into bi-directional dicts.
+*
+*	@param {error} 	Any error passed in.  Not specified in spec, but could be.
+*	@param {String}	The given data as a String, with each line separated by \n.
+*	@param {array}	An array with two dictionaries (key:value pairs).  The first 
+*					dict will be english to lang, the second will be lang to english.
+*	@return {None}	No return value.  Modifies passed dicts without return.
+*/
+function buildDicts(err, data, dict){
+	
+	// Assumes lines are separated by \n
+	var lines = data.split("\n");
+	
+	// For each line in the file, process
+	for (var i = 0; i < lines.length; i++){
+		
+		// Assumes each line is two strings seperated by a \t
+		var line = lines[i].split("\t");
+		var word = line[0].trim();
+		
+		// Skips comments and blank lines
+		if (word.charAt(0) == '#' || !word){
+			continue;
+		}
+
+		var translation = line[1].toLowerCase();
+		
+		// Attempt to only take portions of the line before any
+		// forbidden characters.  Repeatedly splits line for each
+		// character in splits.
+		for (var j = 0; j < splits.length; j++) {
+			var temp = translation.split(splits[j]);
+			
+			translation = temp[0];
+		}
+		
+		// After getting the translation, make sure we have no whitespace leftover.
+		translation = translation.trim();
+		
+		// Add the words to both the forward and backwards dictionary.
+		// We allow the words to be continuously overwritten so that
+		// the last entry in the lang file is the final translation.
+		dict[0][word] = translation;
+		dict[1][translation] = word;
+	}
+}
+
+// Reads in entire file(s) at once and sends to be processed into a dictionary
+// The spec does not specify how to handle nonexistent files, so it is assumed
+// the proper files are at the proper spots.
+fs.readFile('./German.txt', 'utf8', (err, data) => buildDicts(err, data, german));
+fs.readFile('./Spanish.txt', 'utf8', (err, data) => buildDicts(err, data, spanish));
+
+server.listen(port, () => {
+	console.log(`Server Started on port ${port}`);
+});
