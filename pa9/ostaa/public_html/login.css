@@ -1,0 +1,16 @@
+body {
+    background-color: rgb(154, 216, 240);
+}
+
+h1 {
+    color: rgb(3, 61, 83);
+}
+
+div {
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+#addUser {
+    margin-top: 10%;
+}

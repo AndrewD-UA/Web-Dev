@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 1%;
+    padding: 1%;
+}
+
+#addUser {
+    margin-bottom: 5%;
+}
+
+input {
+    width: 20%;
+}
+
+.submit {
+    width: 10%;
+}

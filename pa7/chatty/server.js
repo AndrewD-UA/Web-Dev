@@ -1,3 +1,4 @@
+const https = require('https');
 const express = require('express');
 const app = express();
 const mongoose = require("mongoose");
@@ -35,4 +36,19 @@ app.post('/chatSent', (req,res) => {
 
 app.use(express.static("public_html"));
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+var privateKey = fs.readFileSync( 'domain.key' );
+var certificate = fs.readFileSync( 'domain.crt' );
+
+https.createServer({
+    key: privateKey,
+    cert: certificate
+}, app).listen(port);
+
+// app.listen(port, () => console.log(`Listening on port ${port}`));
+
+// require('crypto');
+// let h  = crypto.createHash('sha3-256');
+// let data = h.update(toHash, 'utf-8');
+// let sid = addSession(username);
+// res.cookie("login",
+//	{username:username, sID:sID, maxAge:maxAge}
