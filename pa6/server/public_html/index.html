@@ -1,8 +1,15 @@
+<!-- By: Andrew Dennison 
+	 This HTML file contains the HTML contents of the Translator
+	 application, and links to both the css and translate.js files.
+	 Translate.js is used to send a request to the web server to
+	 translate the provided words.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 
 	<head>
-		<meta charset="utf-8"/>
+		<meta charset="utf-8">
 		<title>Translator</title>
 		<link id="cssFile" rel="stylesheet" type="text/css" href="./css/style.css">
 	</head>
@@ -12,19 +19,19 @@
 		<div id="content">
 			<div id="input" class="contentSide">
 				<select id="inputLang" class="items">
-					<option value="English">English</option>
 					<option value="Spanish">Spanish</option>
 					<option value="German">German</option>
+					<option value="English">English</option>
 				</select>
-				<textarea id="inputBox" class="items" rows="6" class ="box">Enter a biography here.</textarea>
+				<textarea id="inputBox" class="items" rows="6"></textarea>
 			</div>
 			<div id="output" class="contentSide">
 				<select id="outputLang" class="items">
-					<option value="English">English</option>
 					<option value="Spanish">Spanish</option>
 					<option value="German">German</option>
+					<option value="English">English</option>
 				</select>
-				<textarea id="outputBox" class="items" rows="6" class ="box">Enter a biography here.</textarea>
+				<textarea id="outputBox" class="items" rows="6">?</textarea>
 			</div>
 		</div>
 	<script src="translate.js"></script>
