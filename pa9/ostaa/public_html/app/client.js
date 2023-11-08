@@ -64,4 +64,4 @@ function load(){
 	subItem.onclick = addItem();
 }
 
-window.onload = load();
+//window.onload = load();

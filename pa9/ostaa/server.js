@@ -14,7 +14,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const cors = require("cors");
+//const cors = require("cors");
 const cookieParser = require('cookie-parser');
 
 const port = 80;
@@ -54,55 +54,67 @@ var itemSchema = new mongoose.Schema({
 itemSchema.index({title: "text", description: "text"});
 var item = mongoose.model("Item", itemSchema);
 
-// We will format everything with JSON
-app.use(express.json());
-
-// Allows usage of my domain name
-app.use(cors({
-    origin: 'http://fifthprinciple.net',
-    exposedHeaders: ['Origin, X-Requested-With, Content-Type, Accept']
-}));
-
 app.use(cookieParser());
-
-function addSession(username) {
-    let sid = Math.floor(Math.random() * 1000000000);
-    let now = Date.now();
-    sessions[username] = {id: sid, time: now};
-    return sid;
-}
 
 function removeSessions() {
     let now = Date.now();
     let usernames = Object.keys(sessions);
     for (let i = 0; i < usernames.length; i++) {
+
       let last = sessions[usernames[i]].time;
       if (last + 20000 < now) {
         delete sessions[usernames[i]];
       }
     }
-    console.log(sessions);
 }
-
-function authenticate(req, res, next) {
-    let c = req.cookies;
-    console.log('auth request:');
-    console.log(req.cookies);
-    if (c != undefined &&
-        sessions[c.login] != undefined && 
-        sessions[c.login.username].id == c.login.sessionID){
-            console.log("session validated");
-            next();
-    } else{
-        console.log("Redirecting to login");
-        res.redirect('/public_html/index.html');
-    }
-  }
   
 setInterval(removeSessions, 2000);
 
+app.use(express.json());
+/*app.use(cors({
+    origin: 'http://fifthprinciple.net',
+    exposedHeaders: ['Origin, X-Requested-With, Content-Type, Accept']
+}));*/
+app.use("/app/*", (req, res, next) => {
+    let cookies = req.cookies;
+    
+    if (cookies == undefined){
+        return res.redirect('/index.html');
+    }
+
+    if (sessions[cookies.login.username] == undefined){
+        return res.redirect('/index.html');
+    }
+    
+    if (sessions[cookies.login.username].id != cookies.login.sessionID){
+        return res.redirect('/index.html');
+    }
+
+    next();
+});
+
 app.use(express.static("public_html"));
-app.use("/public_html/home.html", authenticate);
+
+app.post("/account/login", (req, res) => {
+    let userFound = user.find({username: req.body.username, password: req.body.password}).exec();
+
+    userFound.then((results) => {
+        if (results.length == 0) {
+            return "Issue logging in with that info";
+        }
+
+        let sid = Math.floor(Math.random() * 1000000000);
+        sessions[req.body.username] = {id: sid, time: Date.now()};
+
+        res.cookie("login",
+            {username: req.body.username, sessionID: sid},
+            {maxAge: 60000 ^ 2});
+            
+        return "SUCCESS";
+    }).then((message) => {
+        res.end(message);
+    });
+});
 
 // Request handling for all users displays a full list of all users
 app.get("/get/users", (req, res) =>{

@@ -11,6 +11,10 @@ div {
     margin-bottom: 1%;
 }
 
-#addUser {
+#newUserFields {
     margin-top: 10%;
+}
+
+#error {
+    color: red;
 }
