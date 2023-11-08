@@ -1,52 +1,42 @@
 <!-- By: Andrew Dennison -->
-<!-- This HTML file contains the formatting for part one of the Ostaa marketplace-->
+<!-- This HTML file contains the login page for the Ostaa marketplace-->
 
 <!DOCTYPE html>
 <html lang="en">  
-  	<head>
-    	<meta charset="utf-8">
-    	<title>OSTAA</title>
-    	<link id="cssFile" rel="stylesheet" type="text/css" href="./style.css">
-  	</head>
-  
-  	<body>
-	<div id="header">OSTAA</div>
-	<div id="actions">
-		<input type="text" id="searchText">
-		<input type="submit" value="Search Listings" id = "searchListings" class="submit">	
+  <head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link id="cssFile" rel="stylesheet" type="text/css" href="./login.css">
+  </head>
 
-		<input type="submit" value="View Listings" id = "viewListings" class="submit">	
+  <body>
+    <div id="login">
+        <h1 id="ostaaHeader">Ostaa</h1>
+        <h1 id="loginHeader">Login</h1>
+        <div>
+            <label for="username" class="label">Username</label>
+            <input type="text" id="username">
+        </div>
+        <div>
+            <label for="password" class="label">Password</label>
+            <input type="text" id="password">
+        </div>
+        <input type="submit" value="Login" id = "loginUser" class = "submit">	
+    </div>
 
-		<input type="submit" value="View Purchases" id = "viewPurchases" class="submit">	
-
-		<input type="submit" value="Create Listings" id = "createListings" class="submit">	
+	<div id="addUser">
+		<h1 id="newUserHeader">Create User</h1>
+        <div>
+            <label for="usernameAdd" class="label">Username</label>
+            <input type="text" id="usernameAdd">
+        </div>
+        <div>
+            <label for="passwordAdd" class="label">Password</label>
+            <input type="text" id="passwordAdd">
+        </div>
+		<input type="submit" value="Add User" id = "addUser" class = "submit">	
 	</div>
-	<div id="results"></div>
-
-	<div id="addItem">
-		<h1 id="itemHeader">Add Item</h1>
-
-		<label for="title" class="Label">Title:</label>
-		<input type="text" id="title">
-
-		<label for="desc" class="Label">Desc:</label>
-		<input type="text" id="desc">
-
-		<label for="image" class="Label">Image:</label>
-		<input type="text" id="image">
-
-		<label for="price" class="Label">Price:</label>
-		<input type="text" id="price">
-
-		<label for="status" class="Label">Status:</label>
-		<input type="text" id="title">
-
-		<label for="username" class="Label">Username:</label>
-		<input type="text" id="itemUserName">
-
-		<input type="submit" value="Add Item" id = "submitItem" class="submit">	
-	</div>
-	<script src="client.js"></script>
+	<script src="login.js"></script>
   </body>
 
 </html>
