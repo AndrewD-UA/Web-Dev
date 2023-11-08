@@ -95,14 +95,15 @@ function authenticate(req, res, next) {
             next();
     } else{
         console.log("Redirecting to login");
-        res.redirect('/public_html/login.html');
+        res.redirect('/public_html/index.html');
     }
   }
   
 setInterval(removeSessions, 2000);
 
-app.use("*", authenticate);
-app.use(express.static('public_html'))
+app.use(express.static("public_html"));
+app.use("/public_html/home.html", authenticate);
+
 // Request handling for all users displays a full list of all users
 app.get("/get/users", (req, res) =>{
     let usersFound = user.find({}).exec();
@@ -234,6 +235,4 @@ app.post("/add/item/:username", (req, res) => {
 });
 
 // If the request does not match anything else, use our public_html folder
-app.use(express.static("public_html"));
-
 app.listen(port, () => console.log(`Listening on port ${port}`));
