@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: rgb(154, 216, 240);
+}
+
+input {
+    min-width: 100px;
+    width: 35%;
+    height: 100%;
+    font-size: 200%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+label {
+    font-size: 200%;
+}
+
+h1 {
+    color: rgb(3, 61, 83);
+}
+
+#newUserFields {
+    margin-top: 10%;
+}
+
+#error {
+    color: red;
+}
+
+
+#addUser {
+    margin-bottom: 5%;
+}
+
+#loginBody {
+    margin-left: 2%;
+}

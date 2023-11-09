@@ -6,10 +6,10 @@
   <head>
     <meta charset="utf-8">
     <title>Login</title>
-    <link id="cssFile" rel="stylesheet" type="text/css" href="./login.css">
+    <link id="cssFile" rel="stylesheet" type="text/css" href="./style.css">
   </head>
 
-  <body>
+  <body id="loginBody">
     <div id="login">
         <h1 id="ostaaHeader">Ostaa</h1>
         <h1 id="loginHeader">Login</h1>
@@ -21,7 +21,7 @@
             <label for="password" class="label">Password</label>
             <input type="password" id="password">
         </div>
-        <input type="submit" value="Login" id = "loginUser" class = "submit">	
+        <input type="submit" value="Login" id = "loginUser" class = "submit" onclick = "login()">	
     </div>
 
 	<div id="newUserFields">
@@ -34,9 +34,9 @@
             <label for="passwordAdd" class="label">Password</label>
             <input type="text" id="passwordAdd">
         </div>
-		<input type="submit" value="Add User" id = "addUser" class = "submit">	
+		<input type="submit" value="Add User" id = "addUser" class = "submit" onclick = "addUser()">	
 	</div>
-	<script src="login.js"></script>
+	<script src="client.js"></script>
   </body>
 
 </html>

@@ -9,45 +9,23 @@
     	<link id="cssFile" rel="stylesheet" type="text/css" href="./style.css">
   	</head>
   
-  	<body>
-	<div id="header">OSTAA</div>
-	<div id="actions">
-		<input type="text" id="searchText">
-		<input type="submit" value="Search Listings" id = "searchListings" class="submit">	
+  	<body onload="addName()">
+	<h1 id="homeHeader">OSTAA</h1>
+	<div id="content">
+		<div id="actions" class = "contentPanes">
+			<div class = "actions">
+				<input type="text" id="searchText">
+				<input type="submit" value="Search Listings" id = "searchListings" class="submit" onclick = "searchForItems()">	
+			</div>
+			<div class = "actions"><input type="submit" value="View Your Listings" id = "viewListings" class="submit" onclick="retrieve('listings')"></div>
 
-		<input type="submit" value="View Listings" id = "viewListings" class="submit">	
+			<div class = "actions"><input type="submit" value="View Your Purchases" id = "viewPurchases" class="submit" onclick = "retrieve('purchases')"></div>
 
-		<input type="submit" value="View Purchases" id = "viewPurchases" class="submit">	
-
-		<input type="submit" value="Create Listings" id = "createListings" class="submit">	
+			<div class = "actions"><input type="submit" value="Create a Listing" id = "createListings" class="submit" onclick = "goToList()"></div>
+		</div>
+		<div id="results" class = "contentPanes"></div>
 	</div>
-	<div id="results"></div>
-
-	<div id="addItem">
-		<h1 id="itemHeader">Add Item</h1>
-
-		<label for="title" class="Label">Title:</label>
-		<input type="text" id="title">
-
-		<label for="desc" class="Label">Desc:</label>
-		<input type="text" id="desc">
-
-		<label for="image" class="Label">Image:</label>
-		<input type="text" id="image">
-
-		<label for="price" class="Label">Price:</label>
-		<input type="text" id="price">
-
-		<label for="status" class="Label">Status:</label>
-		<input type="text" id="title">
-
-		<label for="username" class="Label">Username:</label>
-		<input type="text" id="itemUserName">
-
-		<input type="submit" value="Add Item" id = "submitItem" class="submit">	
-	</div>
-	<script src="client.js"></script>
+	<script src="functions.js"></script>
   </body>
-
 </html>
 

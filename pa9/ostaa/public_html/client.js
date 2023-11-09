@@ -18,9 +18,7 @@ function addUser(){
     p.then((response) => {
         return response.text();
     }).then((text) => {
-        console.log(text);
-        //document.getElementById("usernameAdd").value = "";
-        //document.getElementById("passwordAdd").value = "";
+        window.alert(text);
     });
 }
 
@@ -46,18 +44,12 @@ function login(){
     }).then((text) => {
         if (text === "SUCCESS"){
             window.location.href = '/app/home.html';
-            return;
         }
 
-        document.getElementById("username").value = "";
-        innerHTML = document.getElementById("login").innerHTML;
-        document.getElementById("login").innerHTML = innerHTML + "<div id='error'>" + text + "</div>";
+        else if (text === "ERROR"){
+            document.getElementById("password").value = "";
+            innerHTML = document.getElementById("login").innerHTML;
+            document.getElementById("login").innerHTML = innerHTML + "<div id='error'>Issue logging in with that info</div>";
+        }
     });
 }
-
-function onLoad(){
-    document.getElementById("loginUser").onclick = login;
-    document.getElementById("addUser").onclick = addUser;
-}
-
-onLoad();

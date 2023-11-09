@@ -1,24 +1,89 @@
 body {
     margin: 0;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-}
-
-div {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    margin: 1%;
-    padding: 1%;
-}
-
-#addUser {
-    margin-bottom: 5%;
+    background-color: rgb(154, 216, 240);
+    overflow: hidden;
 }
 
 input {
-    width: 20%;
+    min-width: 100px;
+    width: fit-content;
+    height: fit-content;
+    height: 100%;
+    font-size: 100%;
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
 
-.submit {
-    width: 10%;
+h1 {
+    color: rgb(3, 61, 83);
+}
+
+h2 {
+    margin: 1%;
+}
+
+#homeHeader {
+    height: 6vh;
+    margin-top: 10vh;
+    margin-left: 2%;
+    font-size: 400%;
+}
+
+#listHeader {
+    margin-top: 3vh;
+}
+
+#content {
+    height: 80vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+
+    position: fixed;
+    bottom: 0;
+}
+
+.contentPanes {
+    border-top: 0.5vh grey solid;
+    background-color: rgb(159, 218, 139);
+    width: 50vw;
+}
+
+#actions {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    border-right: 1vh solid grey;
+    font-size: 300%;
+}
+
+#results {
+    padding-top: 3%;
+    padding-bottom: 3%;
+    border-left: 0.5vh solid grey;
+    overflow-y: scroll;
+}
+
+.actions {
+    margin-left: 10%;
+}
+
+.results {
+    border: 3px solid black;
+    margin-left: 5%;
+    margin-right: 5%;
+    text-align: center;
+    font-size: 300%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.buyButton{
+    font-size: 70%;
+}
+
+#searchText {
+    height: fit-content;
+    width: 40%;
 }

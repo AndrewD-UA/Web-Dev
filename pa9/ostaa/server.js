@@ -46,95 +46,102 @@ var itemSchema = new mongoose.Schema({
 	description: String,
     imgPath: String,
     price: Number,
-    status: String
+    status: String,
+    username: String
 });
 
-// Create an index of title and descriptions
-// Lastly, create our model
+// Create an index of title and descriptions, and our model
 itemSchema.index({title: "text", description: "text"});
 var item = mongoose.model("Item", itemSchema);
 
-app.use(cookieParser());
-
+// Check for inactive sessions and remove them
 function removeSessions() {
+    // Get all current users and the time
     let now = Date.now();
     let usernames = Object.keys(sessions);
-    for (let i = 0; i < usernames.length; i++) {
 
+    // For each user, check if the time exceeds the allotment.  If so, delete it.
+    for (let i = 0; i < usernames.length; i++) {
       let last = sessions[usernames[i]].time;
-      if (last + 20000 < now) {
+      if (last + 2000000000 < now) {
         delete sessions[usernames[i]];
       }
     }
 }
-  
+
+// Every 2 seconds, check if we should remove active sessions
 setInterval(removeSessions, 2000);
 
+// App usages, including our authentication method
+app.use(cookieParser());
 app.use(express.json());
 /*app.use(cors({
     origin: 'http://fifthprinciple.net',
     exposedHeaders: ['Origin, X-Requested-With, Content-Type, Accept']
 }));*/
-app.use("/app/*", (req, res, next) => {
+
+// Check if any request is valid.  Other requests will default to index.html, or the login page.
+app.use("/app/*", (req, res, next) => {    
     let cookies = req.cookies;
     
+    if (req.originalUrl != "/index.html" &&
+        req.originalUrl != "/style.css" &&
+        req.originalUrl != "/client.js"){
     if (cookies == undefined){
         return res.redirect('/index.html');
     }
-
-    if (sessions[cookies.login.username] == undefined){
+    
+    if (cookies.login == undefined){
         return res.redirect('/index.html');
     }
     
-    if (sessions[cookies.login.username].id != cookies.login.sessionID){
+    if (sessions[cookies.login.username] == undefined){
         return res.redirect('/index.html');
     }
 
+    if (sessions[cookies.login.username].id != cookies.login.sessionID){
+        return res.redirect('/index.html');
+    }
     next();
+    }
 });
 
 app.use(express.static("public_html"));
 
+// Request handling for login validation
 app.post("/account/login", (req, res) => {
+    // Check if the provided user exists
     let userFound = user.find({username: req.body.username, password: req.body.password}).exec();
 
     userFound.then((results) => {
+        // If we cannot find any user with that username/password, return
         if (results.length == 0) {
-            return "Issue logging in with that info";
+            return "ERROR";
         }
 
+        // We have now validated login
+        // Generate the cookie and let the client know
         let sid = Math.floor(Math.random() * 1000000000);
         sessions[req.body.username] = {id: sid, time: Date.now()};
-
         res.cookie("login",
             {username: req.body.username, sessionID: sid},
-            {maxAge: 60000 ^ 2});
-            
+            //{maxAge: 60000 ^ 2});
+            {maxAge: 14 * 24 * 3600000});
+
         return "SUCCESS";
     }).then((message) => {
         res.end(message);
     });
 });
 
-// Request handling for all users displays a full list of all users
-app.get("/get/users", (req, res) =>{
-    let usersFound = user.find({}).exec();
-    usersFound.then((users) => {
-        res.end(users.toString());
-    });
-});
-
-// Request handling for all items displays a full list of all items
-app.get("/get/items", (req, res) =>{
-    let itemsFound = item.find({}).exec();
-    itemsFound.then((users) => {
-        res.end(users.toString());
-    });
+app.get("/app/get/username", (req, res) => {
+    res.end(req.cookies.login.username.toString());
 });
 
 // Request handling for one user's listings and displays the list
-app.get("/get/listings/:username", (req, res) =>{
-    let listingsFound = user.find({username: req.params.username}).exec();
+// Returns an array of IDs
+app.get("/app/get/listings/", (req, res) =>{
+    let listingsFound = user.find({username: req.cookies.login.username}).exec();
     
     listingsFound.then((results) => {
         res.end(results[0].listings.toString());
@@ -144,8 +151,8 @@ app.get("/get/listings/:username", (req, res) =>{
 });
 
 // Request handling for one user's purchases and displays the list
-app.get("/get/purchases/:username", (req, res) => {
-    let purchases = user.find({username: req.params.username}).exec();
+app.get("/app/get/purchases/", (req, res) => {
+    let purchases = user.find({username: req.cookies.login.username}).exec();
     
     purchases.then((results) => {
         res.end(results[0].purchases.toString());
@@ -157,25 +164,23 @@ app.get("/get/purchases/:username", (req, res) => {
 // Search through the list of users using our earlier created index.
 // Performs keyword search, so whole-word matches are included, but 
 // partial-word matches are not (For example, searching for "in" does not include "tin")
-app.get("/search/users/:keyword", (req, res) =>{
-    let list = user.find({$text: {$search: req.params.keyword}}).exec();
+// Returns an array of items
+app.get("/app/get/search/items/:keyword", (req, res) =>{
+    let list = item.find({$text: {$search: decodeURIComponent(req.params.keyword)}}).exec();
 
     list.then((results) => {
-        res.end(results.toString());
-    }).catch((error) => {
-        console.log(error);
-        res.end("Username not found!");
+        res.json(results);
     });
 });
 
 // Search through the list of items using our earlier created index.
 // Performs keyword search of name and description.  Whole-word matches are included,
 // but partial-word matches are not (For example, searching for "in" does not include "tin")
-app.get("/search/items/:keyword", (req, res) =>{
-    let itemList = item.find({$text: {$search: req.params.keyword}}).exec();
+app.get("/app/get/items/:id", (req, res) =>{
+    let itemList = item.find({_id: req.params.id}).exec();
 
     itemList.then((users) => {
-        res.end(users.toString());
+        res.end(JSON.stringify(users[0]));
     }).catch((error) => {
         res.end("Items not found!");
     });
@@ -204,47 +209,59 @@ app.post("/add/user", (req, res) => {
         });
     
         newUser.save();
-        return `Username ${name} added`;
+        return `Username ${name} created`;
     }).then((message) => {
         res.end(message);
     });    
 });
 
 // POST handling for new items
-app.post("/add/item/:username", (req, res) => {
-    let checkName = user.find({username: req.params.username}).exec();
+app.post("/app/add/item/", (req, res) => {
+    theUser = req.cookies.login.username;
 
-    // Check to make sure a valid user has been entered
-    checkName.then((checkName) => {
-        return (checkName.length > 0);
-    }).then((found) => {
-        if (!found){
-            return `${req.params.username} not found!`;
-        }
+    let newItem = new item({
+        title: req.body.title,
+        description: req.body.description,
+        imgPath: req.body.imgPath,
+        price: req.body.price,
+        status: req.body.status,
+        username: theUser
+    });
 
-        // We assume now the user does already exist
-        // Add the item to both the list of items and
-        // the user's listings.  Alert the end user after
-        let newItem = new item({
-            title: req.body.title,
-            description: req.body.description,
-            imgPath: req.body.imgPath,
-            price: req.body.price,
-            status: req.body.status
-        });
-
-        user.updateOne({username: req.params.username}, { $push: {listings: newItem._id.toString()}}).catch((error) => {
-            console.log(error);
-        });
-        newItem.save();
-
-        return `${req.body.title} added to ${req.params.username}'s listings`;
-    }).then((result) => {
-        res.end(result);
-    }).catch((error) => {
-        console.log(error);
-    })
+    newItem.save().then(() => {
+        return user.findOneAndUpdate(
+            {username: theUser},
+            {$push: {listings: [newItem._id]}});
+    }).then((userFound) => {
+        res.end("Successful addition");
+    }).catch(() => {
+        res.end("Unsuccessful addition");
+    });
 });
+
+app.get("/app/purchase/:id", (req, res) => {
+    let id = decodeURIComponent(req.params.id);
+
+    item.findOneAndUpdate(
+        {_id: id},
+        {   status: "SOLD",
+            username: req.cookies.login.username})
+    .then((originalItem) => {
+        console.log("Going to remove from purchases");
+        return user.findOneAndUpdate(
+            {username: req.cookies.login.username},
+            {$push: {purchases: [originalItem._id]}});
+    }).then((origOwner) => {
+        console.log(origOwner.username);
+        return user.findOneAndUpdate(
+            {username: origOwner.username},
+            {$pull: {listings: [id]}});
+    }).then(() => {
+        res.end("Successful Purchase");
+    }).catch((error) => {
+        res.end(error);
+    })
+})
 
 // If the request does not match anything else, use our public_html folder
 app.listen(port, () => console.log(`Listening on port ${port}`));

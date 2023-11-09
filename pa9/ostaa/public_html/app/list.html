@@ -1,0 +1,44 @@
+<!-- By: Andrew Dennison -->
+<!-- This HTML file contains the formatting for making a new item-->
+
+<!DOCTYPE html>
+<html lang="en">  
+  	<head>
+    	<meta charset="utf-8">
+    	<title>Ostaa</title>
+    	<link id="cssFile" rel="stylesheet" type="text/css" href="./style.css">
+  	</head>
+  
+  	<body>
+		<h1 id="listHeader">OSTAA</h1>
+		<div id="addItem">
+			<h1 id="itemHeader">Add a post</h1>
+			<div>
+				<label for="title">Title:</label>
+				<input type="text" id="title">
+			</div>
+
+			<div>
+				<label for="desc">Desc:</label>
+				<input type="text" id="desc">
+			</div>
+
+			<div>
+				<label for="price">Price:</label>
+				<input type="text" id="price">
+			</div>
+			
+			<div>
+				<label for="status">Status:</label>
+				<input type="text" id="status">
+			</div>
+
+			<div>
+				<input type="submit" value="Choose File">
+				<input type="submit" value="Create Post" onclick = "submitItem()">
+			</div>
+		</div>
+	<script src="functions.js"></script>
+  </body>
+</html>
+
