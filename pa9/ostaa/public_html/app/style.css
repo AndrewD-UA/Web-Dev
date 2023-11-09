@@ -1,3 +1,8 @@
+/* By: Andrew Dennison
+ * Last updated: 09 NOV 23
+ * This file contains the styling code for the home and "create listing" pages
+ */
+
 body {
     margin: 0;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -27,11 +32,15 @@ h2 {
     height: 6vh;
     margin-top: 10vh;
     margin-left: 2%;
-    font-size: 400%;
+    font-size: 200%;
 }
 
 #listHeader {
     margin-top: 3vh;
+}
+
+#listBody {
+    margin-left: 2%;
 }
 
 #content {
@@ -55,7 +64,7 @@ h2 {
     justify-content: space-around;
     flex-direction: column;
     border-right: 1vh solid grey;
-    font-size: 300%;
+    font-size: 100%;
 }
 
 #results {

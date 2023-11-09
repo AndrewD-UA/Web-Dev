@@ -3,20 +3,17 @@
  * This file contains the GET and POST request handling for the OSTAA website.
  * It also manages the MongoDB storing all of the information for the site.
  * The following assumptions are made based off the client code:
- *      - The password entered is valid (at least four characters)
  *      - The username entered does not already exist in the DB
  *      - Valid requests for searches that have no results return nothing
  *      - The response is processed by the client and displayed to the user
- *      - Users may attempt to access the website via domain name or IP
- *
+ *      - Users may attempt to access the website via domain name or IP *
 */
 
+// Initial requirements
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-//const cors = require("cors");
 const cookieParser = require('cookie-parser');
-
 const port = 80;
 
 // MongoDB connections
@@ -25,6 +22,7 @@ const mongoDB = 'mongodb://127.0.0.1:27017/Ostaa';
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 db.on('error', () => { console.log('MongoDB connection error:') });
 
+// Initialize active sessions
 let sessions = {};
 
 // Create our user schema per the spec
@@ -72,44 +70,44 @@ function removeSessions() {
 // Every 2 seconds, check if we should remove active sessions
 setInterval(removeSessions, 2000);
 
-// App usages, including our authentication method
+// App usages
 app.use(cookieParser());
 app.use(express.json());
-/*app.use(cors({
-    origin: 'http://fifthprinciple.net',
-    exposedHeaders: ['Origin, X-Requested-With, Content-Type, Accept']
-}));*/
 
 // Check if any request is valid.  Other requests will default to index.html, or the login page.
 app.use("/app/*", (req, res, next) => {    
     let cookies = req.cookies;
-    
-    if (req.originalUrl != "/index.html" &&
-        req.originalUrl != "/style.css" &&
-        req.originalUrl != "/client.js"){
+
+    // If we received a user with no cookies, redirect
     if (cookies == undefined){
         return res.redirect('/index.html');
     }
     
+    // If they don't have our cookie, redirect
     if (cookies.login == undefined){
         return res.redirect('/index.html');
     }
     
+    // If we aren't tracking them in our active sessions, redirect
     if (sessions[cookies.login.username] == undefined){
         return res.redirect('/index.html');
     }
 
+    // If they have the same username but not session ID, redirect
     if (sessions[cookies.login.username].id != cookies.login.sessionID){
         return res.redirect('/index.html');
     }
+
+    // Otherwise, allow them to continue onto the website
     next();
-    }
 });
 
+// By default, use the static files
 app.use(express.static("public_html"));
 
 // Request handling for login validation
 app.post("/account/login", (req, res) => {
+
     // Check if the provided user exists
     let userFound = user.find({username: req.body.username, password: req.body.password}).exec();
 
@@ -134,6 +132,7 @@ app.post("/account/login", (req, res) => {
     });
 });
 
+// Returns the username of the user
 app.get("/app/get/username", (req, res) => {
     res.end(req.cookies.login.username.toString());
 });
@@ -215,10 +214,11 @@ app.post("/add/user", (req, res) => {
     });    
 });
 
-// POST handling for new items
+// POST handling for adding a new listing
 app.post("/app/add/item/", (req, res) => {
-    theUser = req.cookies.login.username;
 
+    // Collect and format the required information
+    theUser = req.cookies.login.username;
     let newItem = new item({
         title: req.body.title,
         description: req.body.description,
@@ -228,6 +228,7 @@ app.post("/app/add/item/", (req, res) => {
         username: theUser
     });
 
+    // Save the item, then update the appropriate user's listings
     newItem.save().then(() => {
         return user.findOneAndUpdate(
             {username: theUser},
@@ -239,18 +240,26 @@ app.post("/app/add/item/", (req, res) => {
     });
 });
 
+// Route handling for purchases
 app.get("/app/purchase/:id", (req, res) => {
+
+    // Collect and format required information
     let id = decodeURIComponent(req.params.id);
 
+    // Update the username attached to the original item
     item.findOneAndUpdate(
         {_id: id},
         {   status: "SOLD",
             username: req.cookies.login.username})
+    
+    // Then, update the purchaser's purchases
     .then((originalItem) => {
         console.log("Going to remove from purchases");
         return user.findOneAndUpdate(
             {username: req.cookies.login.username},
             {$push: {purchases: [originalItem._id]}});
+
+    // Then, update the original user's listings       
     }).then((origOwner) => {
         console.log(origOwner.username);
         return user.findOneAndUpdate(
@@ -263,5 +272,5 @@ app.get("/app/purchase/:id", (req, res) => {
     })
 })
 
-// If the request does not match anything else, use our public_html folder
+// Start the server
 app.listen(port, () => console.log(`Listening on port ${port}`));
