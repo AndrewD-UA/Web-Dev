@@ -2,11 +2,6 @@
  * Last updated 08 NOV 23
  * This file contains the GET and POST request handling for the OSTAA website.
  * It also manages the MongoDB storing all of the information for the site.
- * The following assumptions are made based off the client code:
- *      - The username entered does not already exist in the DB
- *      - Valid requests for searches that have no results return nothing
- *      - The response is processed by the client and displayed to the user
- *      - Users may attempt to access the website via domain name or IP *
 */
 
 // Initial requirements
@@ -25,19 +20,6 @@ db.on('error', () => { console.log('MongoDB connection error:') });
 // Initialize active sessions
 let sessions = {};
 
-// Create our user schema per the spec
-var userSchema = new mongoose.Schema({
-	username: String,
-	password: String,
-    listings: [String],
-    purchases: [String]
-});
-
-// Create an index of usernames
-// Lastly, create our model
-userSchema.index({username: "text"});
-var user = mongoose.model("User", userSchema);
-
 // Create our item schema per the spec
 var itemSchema = new mongoose.Schema({
 	title: String,
@@ -48,8 +30,23 @@ var itemSchema = new mongoose.Schema({
     username: String
 });
 
+// Create our user schema per the spec
+var userSchema = new mongoose.Schema({
+	username: String,
+	password: String,
+    listings: [itemSchema],
+    purchases: [itemSchema]
+});
+
+// Create an index of usernames
+// Lastly, create our model
+//userSchema.index({username: "text"});
+var user = mongoose.model("User", userSchema);
+
+
+
 // Create an index of title and descriptions, and our model
-itemSchema.index({title: "text", description: "text"});
+//itemSchema.index({title: "text", description: "text"});
 var item = mongoose.model("Item", itemSchema);
 
 // Check for inactive sessions and remove them
@@ -138,32 +135,43 @@ app.get("/app/get/username", (req, res) => {
 });
 
 // Request handling for one user's listings and displays the list
-// Returns an array of IDs
+// Returns an array of IDs via JSON
 app.get("/app/get/listings/", (req, res) =>{
-    let listingsFound = user.find({username: req.cookies.login.username}).exec();
+    let listingsFound = user.findOne({username: req.cookies.login.username}).exec();
     
     listingsFound.then((results) => {
-        res.end(results[0].listings.toString());
-    }).catch((error) => {
+        res.json(results.listings);
+    }).catch(() => {
         res.end("Username not found");
     });
 });
 
 // Request handling for one user's purchases and displays the list
+// Returns an array of IDs via JSON
 app.get("/app/get/purchases/", (req, res) => {
-    let purchases = user.find({username: req.cookies.login.username}).exec();
+    let purchasesFound = user.findOne({username: req.cookies.login.username}).exec();
     
-    purchases.then((results) => {
-        res.end(results[0].purchases.toString());
-    }).catch((error) => {
+    purchasesFound.then((results) => {
+        res.json(results.purchases);
+    }).catch(() => {
         res.end("Username not found");
+    });
+});
+
+// Route request for all items
+// This occurs when the search field is empty and a "search listings" request is made
+app.get("/app/get/items", (req, res) => {
+    let items = item.find({}).exec();
+
+    items.then((results) => {
+        res.json(results);
     });
 });
 
 // Search through the list of items by keyword
 // Searches title and description with regular expression
 // Returns an array of items
-app.get("/app/get/search/items/:keyword", (req, res) =>{
+app.get("/app/get/items/:keyword", (req, res) =>{
     // Collect our search word
     let keyword = decodeURIComponent(req.params.keyword);
 
@@ -177,17 +185,6 @@ app.get("/app/get/search/items/:keyword", (req, res) =>{
     // Return the results in JSON format
     list.then((results) => {
         res.json(results);
-    });
-});
-
-// Search through the list of items by ID
-app.get("/app/get/items/:id", (req, res) =>{
-    let itemList = item.find({_id: req.params.id}).exec();
-
-    itemList.then((users) => {
-        res.end(JSON.stringify(users[0]));
-    }).catch((error) => {
-        res.end("Items not found!");
     });
 });
 
@@ -238,7 +235,7 @@ app.post("/app/add/item/", (req, res) => {
     newItem.save().then(() => {
         return user.findOneAndUpdate(
             {username: theUser},
-            {$push: {listings: [newItem._id]}});
+            {$push: {listings: [newItem]}});
     }).then((userFound) => {
         res.end("Successful addition");
     }).catch(() => {
@@ -253,7 +250,7 @@ app.get("/app/purchase/:id", (req, res) => {
     let id = decodeURIComponent(req.params.id);
 
     // Update the username attached to the original item
-    item.findOneAndUpdate(
+    let originalItem = item.findOneAndUpdate(
         {_id: id},
         {   status: "SOLD",
             username: req.cookies.login.username})
@@ -262,17 +259,17 @@ app.get("/app/purchase/:id", (req, res) => {
     .then((originalItem) => {
         return user.findOneAndUpdate(
             {username: req.cookies.login.username},
-            {$push: {purchases: [originalItem._id]}});
+            {$push: {purchases: [originalItem]}});
 
     // Then, update the original user's listings       
     }).then((origOwner) => {
         return user.findOneAndUpdate(
             {username: origOwner.username},
-            {$pull: {listings: [id]}});
+            {$pull: {listings: [originalItem]}});
     }).then(() => {
         res.end("Successful Purchase");
     }).catch((error) => {
-        res.end(error);
+        res.send(error);
     })
 })
 

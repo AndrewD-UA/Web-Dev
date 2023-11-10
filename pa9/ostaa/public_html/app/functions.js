@@ -11,7 +11,7 @@ function searchForItems(){
     displayArea.innerHTML = "";
 
     // Collect and format the required information, then send the request
-    let url = "/app/get/search/items/" + encodeURIComponent(document.getElementById("searchText").value);
+    let url = "/app/get/items/" + encodeURIComponent(document.getElementById("searchText").value);
     let getReq = fetch(url, {
         method: 'GET',
         headers: {'Content-Type': 'application/json'}
@@ -46,7 +46,7 @@ function submitItem(){
     // Collect the required information
     let srcTitle = document.getElementById("title").value;
     let srcDesc = document.getElementById("desc").value;
-    //let srcImgPath = document.getElementById("image").value;
+    let srcImg = document.getElementById("img").value;
     let srcPrice = parseInt(document.getElementById("price").value);
     let srcStatus = document.getElementById("status").value;
     
@@ -54,7 +54,7 @@ function submitItem(){
     let info = {
         title:        srcTitle, 
         description:  srcDesc,
-        imgPath:      "imgPath",
+        imgPath:      srcImg,
         price:        srcPrice,
         status:       srcStatus    };    
 
@@ -86,31 +86,11 @@ function retrieve(type){
 
     // Handle the request response
     p.then((results) => {
-        return results.text();
-    }).then((text) => {
-
-        // If we received a response of item IDs
-        if (text != ""){
-
-            // Iterate through each item ID
-            let items = text.split(',');
-            for (let i = 0; i < items.length; i++){ 
-                
-                // Get the details of the specific listing
-                let data = fetch("/app/get/items/" + items[i], {
-                    method: 'GET',
-                    headers: {'Content-Type': 'application/json'}
-                });
-                
-                // Convert the details of the listing to HTML and add it to the DOM
-                data.then((results) => {
-                    return results.json();
-                }).then((jsonObject) => {
-                    return getHTMLFromJSON(jsonObject, type);                      
-                }).then((resultHTML) => {
-                    displayArea.innerHTML += resultHTML;
-                })
-            }
+        return results.json();
+    }).then((items) => {
+        // Iterate through each item and add it to the DOM
+        for (let i = 0; i < items.length; i++){ 
+            displayArea.innerHTML += getHTMLFromJSON(items[i], type);
         }
     });
 }
