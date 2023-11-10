@@ -160,21 +160,27 @@ app.get("/app/get/purchases/", (req, res) => {
     });
 });
 
-// Search through the list of users using our earlier created index.
-// Performs keyword search, so whole-word matches are included, but 
-// partial-word matches are not (For example, searching for "in" does not include "tin")
+// Search through the list of items by keyword
+// Searches title and description with regular expression
 // Returns an array of items
 app.get("/app/get/search/items/:keyword", (req, res) =>{
-    let list = item.find({$text: {$search: decodeURIComponent(req.params.keyword)}}).exec();
+    // Collect our search word
+    let keyword = decodeURIComponent(req.params.keyword);
 
+    // Search for that keyword in either title or description
+    let list = item.find( {$or :
+        [
+            { title: {$regex: keyword}},
+            { description: {$regex: keyword}}
+        ]}).exec();
+
+    // Return the results in JSON format
     list.then((results) => {
         res.json(results);
     });
 });
 
-// Search through the list of items using our earlier created index.
-// Performs keyword search of name and description.  Whole-word matches are included,
-// but partial-word matches are not (For example, searching for "in" does not include "tin")
+// Search through the list of items by ID
 app.get("/app/get/items/:id", (req, res) =>{
     let itemList = item.find({_id: req.params.id}).exec();
 
@@ -254,14 +260,12 @@ app.get("/app/purchase/:id", (req, res) => {
     
     // Then, update the purchaser's purchases
     .then((originalItem) => {
-        console.log("Going to remove from purchases");
         return user.findOneAndUpdate(
             {username: req.cookies.login.username},
             {$push: {purchases: [originalItem._id]}});
 
     // Then, update the original user's listings       
     }).then((origOwner) => {
-        console.log(origOwner.username);
         return user.findOneAndUpdate(
             {username: origOwner.username},
             {$pull: {listings: [id]}});
