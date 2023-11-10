@@ -58,7 +58,7 @@ function removeSessions() {
     // For each user, check if the time exceeds the allotment.  If so, delete it.
     for (let i = 0; i < usernames.length; i++) {
       let last = sessions[usernames[i]].time;
-      if (last + 2000000000 < now) {
+      if (last + 200000 < now) {
         delete sessions[usernames[i]];
       }
     }
@@ -120,8 +120,7 @@ app.post("/account/login", (req, res) => {
         sessions[req.body.username] = {id: sid, time: Date.now()};
         res.cookie("login",
             {username: req.body.username, sessionID: sid},
-            //{maxAge: 60000 ^ 2});
-            {maxAge: 14 * 24 * 3600000});
+            {maxAge: 60000 ^ 2});
 
         return "SUCCESS";
     }).then((message) => {
@@ -252,11 +251,10 @@ app.get("/app/purchase/:id", (req, res) => {
     // Update the username attached to the original item
     let originalItem = item.findOneAndUpdate(
         {_id: id},
-        {   status: "SOLD",
-            username: req.cookies.login.username})
+        {   status: "SOLD"});
     
     // Then, update the purchaser's purchases
-    .then((originalItem) => {
+    originalItem.then((originalItem) => {
         return user.findOneAndUpdate(
             {username: req.cookies.login.username},
             {$push: {purchases: [originalItem]}});

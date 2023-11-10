@@ -22,7 +22,7 @@ function addUser(){
         username: name, 
         password: pwd,
     };
-    let url = "http://localhost:80/add/user/";
+    let url = "http://206.81.15.22:80/add/user/";
     
     // Create the POST request
     let p = fetch(url, {
@@ -62,7 +62,7 @@ function addItem(){
         imgPath:      srcImgPath,
         price:        srcPrice,
         status:       srcStatus    };    
-    let url = "http://localhost:80/add/item/" + srcName;
+    let url = "http://206.81.15.22:80/add/item/" + srcName;
     
     // Create the POST request
     let p = fetch(url, {

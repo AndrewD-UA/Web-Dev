@@ -15,7 +15,7 @@ function addUser(){
     };
 
     // Send the POST to the server
-    let url = "http://127.0.0.1:80/add/user/";    
+    let url = "http://localhost:80/add/user/";    
     let p = fetch(url, {
         method: 'POST',
         body: JSON.stringify(info),
@@ -42,7 +42,7 @@ function login(){
     };
     
     // Send the login request to the server
-    let url = "http://127.0.0.1:80/account/login/";
+    let url = "http://localhost:80/account/login/";
     let p = fetch(url, {
         method: 'POST',
         body: JSON.stringify(info),

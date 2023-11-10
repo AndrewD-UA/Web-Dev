@@ -11,7 +11,7 @@ function searchForItems(){
     displayArea.innerHTML = "";
 
     // Collect and format the required information, then send the request
-    let url = "/app/get/items/" + encodeURIComponent(document.getElementById("searchText").value);
+    let url = "http://localhost:80/app/get/items/" + encodeURIComponent(document.getElementById("searchText").value);
     let getReq = fetch(url, {
         method: 'GET',
         headers: {'Content-Type': 'application/json'}
@@ -59,7 +59,7 @@ function submitItem(){
         status:       srcStatus    };    
 
     // Create and send the POST request
-    let url = "http://127.0.0.1:80/app/add/item/";
+    let url = "http://localhost:80/app/add/item/";
     let p = fetch(url, {
         method: 'POST',
         body: JSON.stringify(info),
@@ -82,7 +82,7 @@ function retrieve(type){
     displayArea.innerHTML = "";
 
     // Send off the specified request
-    let p = fetch("/app/get/" + type);
+    let p = fetch("http://localhost:80/app/get/" + type);
 
     // Handle the request response
     p.then((results) => {
@@ -99,7 +99,7 @@ function retrieve(type){
 function purchase(id){
 
     // Send off notification of the purchase
-    let p = fetch("http://127.0.0.1:80/app/purchase/" + encodeURIComponent(id) + "/");
+    let p = fetch("http://localhost:80/app/purchase/" + encodeURIComponent(id) + "/");
 
     // Handle the server's response to the purchase request
     p.then((response) => {
@@ -115,7 +115,6 @@ function purchase(id){
 // This is used exclusively by retrieve and search
 // This does not link purchase to the onclick of the specified item
 function getHTMLFromJSON(jsonObject, urlParameter){
-
     // If we somehow get passed an invalid argument
     if (jsonObject == null){
         return "<h2>Nothing here!</h2>";
@@ -133,7 +132,7 @@ function getHTMLFromJSON(jsonObject, urlParameter){
     if (urlParameter === "listings"){
         displayHTML += "<div>" + jsonObject.status + "</div></div>"
     }
-    else if (jsonObject.status === "SOLD"){
+    else if (jsonObject.status === "SOLD" || urlParameter === "purchases"){
         displayHTML += "<div>Item has been purchased</div></div>";
     } else {
         displayHTML +=  "<input type='submit' class='buyButton'" + 
@@ -147,7 +146,7 @@ function getHTMLFromJSON(jsonObject, urlParameter){
 function addName(){
 
     // Send our username request
-    let p = fetch("http://127.0.0.1:80/app/get/username/");
+    let p = fetch("http://localhost:80/app/get/username/");
 
     // Build and display the username
     p.then((response) => {
